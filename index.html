@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NTUST EE | Cyber-Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050505;
+            --neon-green: #00ff66;
+            --neon-pink: #ff0055;
+            --neon-blue: #00f0ff;
+            --text-color: #e0e0e0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Share Tech Mono', monospace;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* CRT Scanlines & Noise overlay */
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        section {
+            min-height: 100vh;
+            padding: 4rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+        }
+
+        /* Node 01: Hero */
+        #hero {
+            align-items: center;
+            text-align: center;
+            background: radial-gradient(circle at center, #111 0%, var(--bg-color) 100%);
+        }
+
+        .glitch-wrapper {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .glitch {
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--text-color);
+            position: relative;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-color);
+        }
+
+        .glitch::before {
+            left: 3px;
+            text-shadow: -2px 0 var(--neon-pink);
+            clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+            animation: glitch-anim 2.5s infinite linear alternate-reverse;
+        }
+
+        .glitch::after {
+            left: -3px;
+            text-shadow: -2px 0 var(--neon-blue);
+            clip-path: polygon(0 80%, 100% 20%, 100% 100%, 0 100%);
+            animation: glitch-anim2 3s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% { clip-path: inset(20% 0 80% 0); }
+            20% { clip-path: inset(60% 0 10% 0); }
+            40% { clip-path: inset(40% 0 50% 0); }
+            60% { clip-path: inset(80% 0 5% 0); }
+            80% { clip-path: inset(10% 0 70% 0); }
+            100% { clip-path: inset(30% 0 50% 0); }
+        }
+
+        @keyframes glitch-anim2 {
+            0% { clip-path: inset(10% 0 60% 0); }
+            20% { clip-path: inset(30% 0 20% 0); }
+            40% { clip-path: inset(70% 0 10% 0); }
+            60% { clip-path: inset(20% 0 50% 0); }
+            80% { clip-path: inset(50% 0 30% 0); }
+            100% { clip-path: inset(5% 0 80% 0); }
+        }
+
+        .subtitle {
+            color: var(--neon-green);
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; text-shadow: 0 0 10px var(--neon-green); } }
+
+        /* Node 02: Core Domains */
+        .section-title {
+            color: var(--neon-blue);
+            font-size: 2.2rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 5px var(--neon-blue);
+            border-bottom: 1px solid var(--neon-blue);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .card-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .cyber-card {
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid #333;
+            padding: 1.5rem;
+            position: relative;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cyber-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 4px; height: 100%;
+            background: var(--neon-green);
+            transition: width 0.3s ease;
+        }
+
+        .cyber-card:nth-child(2)::before { background: var(--neon-pink); }
+        .cyber-card:nth-child(3)::before { background: var(--neon-blue); }
+
+        .cyber-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.2);
+            border-color: var(--neon-green);
+        }
+        .cyber-card:nth-child(2):hover { box-shadow: 0 0 15px rgba(255, 0, 85, 0.2); border-color: var(--neon-pink); }
+        .cyber-card:nth-child(3):hover { box-shadow: 0 0 15px rgba(0, 240, 255, 0.2); border-color: var(--neon-blue); }
+
+        .cyber-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+        }
+        
+        .cyber-card:nth-child(1) h3 { color: var(--neon-green); }
+        .cyber-card:nth-child(2) h3 { color: var(--neon-pink); }
+        .cyber-card:nth-child(3) h3 { color: var(--neon-blue); }
+
+        .cyber-card p {
+            color: #aaa;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+
+        /* 詳細介紹連結 (Card Links) */
+        .card-link {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            text-decoration: none;
+            letter-spacing: 1px;
+            align-self: flex-start;
+            padding-bottom: 2px;
+            border-bottom: 1px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cyber-card:nth-child(1) .card-link { color: var(--neon-green); }
+        .cyber-card:nth-child(2) .card-link { color: var(--neon-pink); }
+        .cyber-card:nth-child(3) .card-link { color: var(--neon-blue); }
+
+        .cyber-card:nth-child(1) .card-link:hover { border-bottom-color: var(--neon-green); text-shadow: 0 0 8px var(--neon-green); }
+        .cyber-card:nth-child(2) .card-link:hover { border-bottom-color: var(--neon-pink); text-shadow: 0 0 8px var(--neon-pink); }
+        .cyber-card:nth-child(3) .card-link:hover { border-bottom-color: var(--neon-blue); text-shadow: 0 0 8px var(--neon-blue); }
+
+        /* Node 03: Lab Terminal */
+        .terminal-window {
+            background: #000;
+            border: 1px solid #333;
+            border-radius: 4px;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.1);
+            overflow: hidden;
+        }
+
+        .terminal-header {
+            background: #111;
+            color: #666;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .terminal-header::before {
+            content: 'root@ntust-ee:~';
+            color: var(--neon-blue);
+        }
+
+        .terminal-body {
+            padding: 1.5rem;
+            min-height: 200px;
+            color: var(--neon-green);
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 1.2em;
+            background-color: var(--neon-green);
+            vertical-align: middle;
+            animation: blink-cursor 1s step-end infinite;
+        }
+
+        @keyframes blink-cursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* Node 04: Action */
+        .action-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .cyber-btn {
+            background: transparent;
+            color: var(--text-color);
+            border: 1px solid var(--neon-pink);
+            padding: 1rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .cyber-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 0, 85, 0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .cyber-btn:hover::before { left: 100%; }
+        .cyber-btn:hover {
+            background: rgba(255, 0, 85, 0.1);
+            box-shadow: 0 0 15px var(--neon-pink);
+            text-shadow: 0 0 5px var(--neon-pink);
+        }
+
+        .cyber-btn.alt { border-color: var(--neon-blue); }
+        .cyber-btn.alt::before { background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.4), transparent); }
+        .cyber-btn.alt:hover {
+            background: rgba(0, 240, 255, 0.1);
+            box-shadow: 0 0 15px var(--neon-blue);
+            text-shadow: 0 0 5px var(--neon-blue);
+        }
+
+        /* Cyber Modal (彈出視窗) */
+        #cyber-modal {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(5, 5, 10, 0.85);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        #cyber-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: rgba(10, 10, 10, 0.95);
+            border: 1px solid var(--theme-color, var(--neon-blue));
+            box-shadow: 0 0 20px var(--theme-color, rgba(0, 240, 255, 0.2));
+            width: 90%;
+            max-width: 500px;
+            padding: 2rem;
+            position: relative;
+            transform: translateY(30px) scale(0.95);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #cyber-modal.active .modal-content {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal-title {
+            color: var(--theme-color, var(--neon-blue));
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #333;
+            padding-bottom: 0.5rem;
+            text-shadow: 0 0 5px var(--theme-color, var(--neon-blue));
+        }
+
+        .modal-body {
+            color: #ddd;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            text-align: justify;
+        }
+
+        .close-btn {
+            background: transparent;
+            color: var(--text-color);
+            border: 1px solid #666;
+            padding: 0.8rem 1rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            width: 100%;
+            transition: all 0.2s;
+        }
+
+        .close-btn:hover {
+            border-color: var(--theme-color, var(--neon-blue));
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 10px var(--theme-color, var(--neon-blue));
+        }
+
+    </style>
+</head>
+<body>
+    <div class="scanlines"></div>
+
+    <!-- Node 01: System Core -->
+    <section id="hero">
+        <div class="glitch-wrapper">
+            <h1 class="glitch" data-text="NTUST EE">NTUST EE</h1>
+        </div>
+        <p class="subtitle">> SYSTEM.READY_</p>
+    </section>
+
+    <!-- Node 02: Core Domains -->
+    <section id="domains">
+        <h2 class="section-title">CORE_DOMAINS</h2>
+        <div class="card-container">
+            <div class="cyber-card">
+                <h3>[01] DSP & ULTRASOUND</h3>
+                <p>醫學超音波影像、Delay-and-Sum 波束成形、SVD 雜訊濾波與 MATLAB 數位訊號處理演算法開發。</p>
+                <a href="#" class="card-link" data-id="domain-1">>> 存取詳細資料_</a>
+            </div>
+            <div class="cyber-card">
+                <h3>[02] EMBEDDED SYSTEMS</h3>
+                <p>嵌入式系統設計、MCU 韌體開發、數位控制系統與 Tustin 離散化應用。</p>
+                <a href="#" class="card-link" data-id="domain-2">>> 存取詳細資料_</a>
+            </div>
+            <div class="cyber-card">
+                <h3>[03] POWER & CONTROL</h3>
+                <p>電力電子、智慧電網、Simulink RLC 電路建模與雙迴路 PI 控制器設計。</p>
+                <a href="#" class="card-link" data-id="domain-3">>> 存取詳細資料_</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Node 03: Lab Terminal -->
+    <section id="terminal">
+        <h2 class="section-title" style="color: var(--neon-green); border-color: var(--neon-green);">LAB_TERMINAL</h2>
+        <div class="terminal-window">
+            <div class="terminal-header"><span></span><span>bash - 80x24</span></div>
+            <div class="terminal-body">
+                <span id="typewriter-text"></span><span class="cursor"></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Node 04: Neural Link -->
+    <section id="contact">
+        <h2 class="section-title" style="color: var(--neon-pink); border-color: var(--neon-pink);">NEURAL_LINK</h2>
+        <div class="action-group">
+            <a href="https://www.ee.ntust.edu.tw/p/412-1027-12745.php?Lang=zh-tw" class="cyber-btn" target="_blank">Initialize Connection // 招生資訊</a>
+            <a href="https://www.ee.ntust.edu.tw/" class="cyber-btn alt" target="_blank">Access Mainframe // 官方網站</a>
+        </div>
+    </section>
+
+    <!-- Modal Overlay -->
+    <div id="cyber-modal">
+        <div class="modal-content">
+            <h3 class="modal-title" id="modal-title">TITLE_</h3>
+            <div class="modal-body" id="modal-text">DATA_STREAM_</div>
+            <button class="close-btn" id="close-modal">[X] DISCONNECT</button>
+        </div>
+    </div>
+
+    <script>
+        // --- Modal Data & Logic ---
+        const modalData = {
+            'domain-1': {
+                title: '[01] DSP & ULTRASOUND',
+                text: '深入探討醫學超音波影像技術，專注於 Power Doppler 血流造影與高階波束成形演算法（包含 Delay-and-Sum、Minimum Variance 與 Hyper-Beamforming）。結合 MATLAB 進行數位訊號處理與 FIR 濾波器設計，並導入奇異值分解（SVD）技術進行雜訊濾波與 Casorati 矩陣建構，致力於提升影像品質與 GPU 運算加速。',
+                color: 'var(--neon-green)'
+            },
+            'domain-2': {
+                title: '[02] EMBEDDED SYSTEMS',
+                text: '專注於嵌入式系統底層架構與 MCU 韌體開發，涵蓋硬體周邊控制與即時作業系統應用。結合數位控制理論與訊號處理技術，利用 Tustin 轉換進行離散化設計，並將演算法實際部署於微控制器上，實現高效能、低延遲的邊緣運算與智慧控制解決方案。',
+                color: 'var(--neon-pink)'
+            },
+            'domain-3': {
+                title: '[03] POWER & CONTROL',
+                text: '深入電力電子與先進控制系統領域，運用 Simulink 進行 RLC 電路建模與狀態空間（State-Space）分析。專精於電壓與電流雙迴路 PI 控制器設計，並透過波德圖（Bode Plots）與步階響應（Step Response）進行系統頻率響應分析與穩定度調校，實現高效率的電能轉換與精準控制。',
+                color: 'var(--neon-blue)'
+            }
+        };
+
+        const modal = document.getElementById('cyber-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalText = document.getElementById('modal-text');
+        const modalContent = document.querySelector('.modal-content');
+        const closeModalBtn = document.getElementById('close-modal');
+
+        // Open Modal
+        document.querySelectorAll('.card-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const id = e.target.getAttribute('data-id');
+                const data = modalData[id];
+                
+                // Populate content
+                modalTitle.textContent = data.title;
+                modalText.textContent = data.text;
+                
+                // Set dynamic theme color for modal
+                modalContent.style.setProperty('--theme-color', data.color);
+                
+                // Show modal
+                modal.classList.add('active');
+            });
+        });
+
+        // Close Modal via button
+        closeModalBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        // Close Modal via outside click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+
+
+        // --- Terminal Typewriter Effect ---
+        const terminalText = [
+            "> INITIALIZING SYSTEM KERNEL...",
+            "> LOADING MATLAB DSP SCRIPTS... [OK]",
+            "> COMPILING EMBEDDED FIRMWARE... [OK]",
+            "> MOUNTING SVD FILTERING MODULES... [OK]",
+            "> CONNECTION TO NTUST_EE ESTABLISHED.",
+            "> AWAITING USER INPUT_"
+        ];
+        
+        const typeWriterElement = document.getElementById('typewriter-text');
+        let lineIndex = 0;
+        let charIndex = 0;
+
+        function typeWriter() {
+            if (lineIndex < terminalText.length) {
+                if (charIndex < terminalText[lineIndex].length) {
+                    typeWriterElement.innerHTML += terminalText[lineIndex].charAt(charIndex);
+                    charIndex++;
+                    setTimeout(typeWriter, Math.random() * 30 + 20); // Random typing speed
+                } else {
+                    typeWriterElement.innerHTML += "<br/>";
+                    lineIndex++;
+                    charIndex = 0;
+                    setTimeout(typeWriter, 400); // Pause between lines
+                }
+            }
+        }
+
+        // Intersection Observer to trigger typewriter when terminal is in view
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    setTimeout(typeWriter, 500);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        observer.observe(document.getElementById('terminal'));
+
+        // --- Glitch effect randomizer on scroll for Hero section ---
+        window.addEventListener('scroll', () => {
+            const hero = document.getElementById('hero');
+            const scrollY = window.scrollY;
+            if(scrollY < window.innerHeight) {
+                hero.style.transform = `translateY(${scrollY * 0.3}px)`;
+                hero.style.opacity = 1 - (scrollY / window.innerHeight);
+            }
+        });
+    </script>
+</body>
+</html>
